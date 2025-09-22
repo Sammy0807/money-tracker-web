@@ -1,0 +1,227 @@
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-topbar',
+  standalone: true,
+  template: `
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-icon">💸</span>
+        <span class="brand-text">Finance</span>
+      </div>
+      <div class="spacer"></div>
+      <div class="user-section">
+        <div class="notifications">
+          <span class="notification-icon">🔔</span>
+          <span class="notification-badge">3</span>
+        </div>
+        <div class="user-profile" (click)="toggleUserMenu()">
+          <div class="user-avatar">
+            <span class="avatar-icon">👤</span>
+          </div>
+          <div class="user-info">
+            <span class="user-name">John Doe</span>
+            <span class="user-role">Administrator</span>
+          </div>
+          <span class="dropdown-arrow">▼</span>
+        </div>
+        <div class="user-menu" [class.show]="showUserMenu">
+          <a href="#" class="menu-item">Profile</a>
+          <a href="#" class="menu-item">Settings</a>
+          <div class="menu-divider"></div>
+          <a href="#" class="menu-item logout" (click)="logout()">Logout</a>
+        </div>
+      </div>
+    </header>
+  `,
+  styles: [`
+    .topbar {
+      display: flex;
+      align-items: center;
+      padding: 0 2rem;
+      height: 64px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+      position: relative;
+      z-index: 1000;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .brand-icon {
+      font-size: 1.5rem;
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 20%, 53%, 80%, 100% { transform: translateY(0); }
+      40%, 43% { transform: translateY(-8px); }
+      70% { transform: translateY(-4px); }
+      90% { transform: translateY(-2px); }
+    }
+
+    .spacer {
+      flex: 1;
+    }
+
+    .user-section {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      position: relative;
+    }
+
+    .notifications {
+      position: relative;
+      cursor: pointer;
+      padding: 0.5rem;
+      border-radius: 50%;
+      transition: background-color 0.2s ease;
+    }
+
+    .notifications:hover {
+      background-color: rgba(255,255,255,0.1);
+    }
+
+    .notification-icon {
+      font-size: 1.25rem;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background: #ff4757;
+      color: white;
+      font-size: 0.75rem;
+      padding: 0.125rem 0.375rem;
+      border-radius: 10px;
+      min-width: 18px;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      transition: all 0.2s ease;
+    }
+
+    .user-profile:hover {
+      background-color: rgba(255,255,255,0.1);
+      transform: translateY(-1px);
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.125rem;
+    }
+
+    .user-name {
+      font-weight: 600;
+      font-size: 0.875rem;
+    }
+
+    .user-role {
+      font-size: 0.75rem;
+      opacity: 0.8;
+    }
+
+    .dropdown-arrow {
+      font-size: 0.75rem;
+      transition: transform 0.2s ease;
+    }
+
+    .user-profile:hover .dropdown-arrow {
+      transform: rotate(180deg);
+    }
+
+    .user-menu {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      background: white;
+      color: #333;
+      border-radius: 12px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+      min-width: 180px;
+      overflow: hidden;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+    }
+
+    .user-menu.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .menu-item {
+      display: block;
+      padding: 0.75rem 1rem;
+      text-decoration: none;
+      color: #333;
+      font-size: 0.875rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .menu-item:hover {
+      background-color: #f8f9fa;
+    }
+
+    .menu-item.logout {
+      color: #ff4757;
+    }
+
+    .menu-item.logout:hover {
+      background-color: #fff5f5;
+    }
+
+    .menu-divider {
+      height: 1px;
+      background-color: #e9ecef;
+      margin: 0.5rem 0;
+    }
+  `]
+})
+export class TopbarComponent {
+  showUserMenu = false;
+
+  toggleUserMenu() {
+    this.showUserMenu = !this.showUserMenu;
+  }
+
+  logout() {
+    console.log('Logout clicked (mock mode)');
+    this.showUserMenu = false;
+    // In mock mode, just reload
+    window.location.reload();
+  }
+}

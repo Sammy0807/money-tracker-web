@@ -1,0 +1,729 @@
+{
+  "meta": {
+    "version": "2.0",
+    "generatedAt": "2025-09-22T09:31:19.598865Z",
+    "totalAccounts": 12,
+    "totalTransactions": 1850,
+    "dataRange": {
+      "from": "2024-01-01T00:00:00.000Z",
+      "to": "2025-09-22T23:59:59.999Z"
+    }
+  },
+  "user": {
+    "id": "660eee24-bb5c-49b1-8f2e-7f1609e81a47",
+    "email": "alice@example.com",
+    "name": "Alice Johnson",
+    "locale": "en-US",
+    "currency": "USD",
+    "timezone": "America/Chicago",
+    "createdAt": "2024-08-18T09:31:19.598865Z",
+    "updatedAt": "2025-09-22T09:21:19.598865Z"
+  },
+  "analytics": {
+    "kpis": [
+      {
+        "name": "Total Net Worth",
+        "value": 178542.87,
+        "delta": 4.2,
+        "trend": "up",
+        "period": "month"
+      },
+      {
+        "name": "Monthly Income",
+        "value": 8750.00,
+        "delta": 2.1,
+        "trend": "up",
+        "period": "month"
+      },
+      {
+        "name": "Monthly Expenses",
+        "value": 6234.56,
+        "delta": -1.8,
+        "trend": "down",
+        "period": "month"
+      },
+      {
+        "name": "Savings Rate",
+        "value": 28.8,
+        "delta": 3.2,
+        "trend": "up",
+        "period": "month"
+      },
+      {
+        "name": "Investment Growth",
+        "value": 12.4,
+        "delta": 1.7,
+        "trend": "up",
+        "period": "year"
+      },
+      {
+        "name": "Debt-to-Income Ratio",
+        "value": 15.6,
+        "delta": -2.1,
+        "trend": "down",
+        "period": "month"
+      }
+    ],
+    "monthlyTrends": [
+      { "month": "2025-01", "income": 8500, "expenses": 6100, "savings": 2400, "netWorth": 165420 },
+      { "month": "2025-02", "income": 8500, "expenses": 6250, "savings": 2250, "netWorth": 167890 },
+      { "month": "2025-03", "income": 8750, "expenses": 6180, "savings": 2570, "netWorth": 170234 },
+      { "month": "2025-04", "income": 8750, "expenses": 6340, "savings": 2410, "netWorth": 172156 },
+      { "month": "2025-05", "income": 8750, "expenses": 6120, "savings": 2630, "netWorth": 174567 },
+      { "month": "2025-06", "income": 9000, "expenses": 6380, "savings": 2620, "netWorth": 176234 },
+      { "month": "2025-07", "income": 8750, "expenses": 6290, "savings": 2460, "netWorth": 177890 },
+      { "month": "2025-08", "income": 8750, "expenses": 6150, "savings": 2600, "netWorth": 178120 },
+      { "month": "2025-09", "income": 8750, "expenses": 6235, "savings": 2515, "netWorth": 178543 }
+    ],
+    "categoryBreakdown": [
+      { "category": "Housing", "amount": 2200, "percentage": 35.3, "trend": "stable" },
+      { "category": "Food & Dining", "amount": 850, "percentage": 13.6, "trend": "up" },
+      { "category": "Transportation", "amount": 650, "percentage": 10.4, "trend": "down" },
+      { "category": "Utilities", "amount": 420, "percentage": 6.7, "trend": "stable" },
+      { "category": "Healthcare", "amount": 380, "percentage": 6.1, "trend": "up" },
+      { "category": "Entertainment", "amount": 320, "percentage": 5.1, "trend": "up" },
+      { "category": "Shopping", "amount": 560, "percentage": 9.0, "trend": "stable" },
+      { "category": "Insurance", "amount": 340, "percentage": 5.5, "trend": "stable" },
+      { "category": "Debt Payments", "amount": 290, "percentage": 4.7, "trend": "down" },
+      { "category": "Miscellaneous", "amount": 224, "percentage": 3.6, "trend": "variable" }
+    ],
+    "incomeStreams": [
+      { "source": "Primary Salary", "amount": 7500, "percentage": 85.7, "type": "salary" },
+      { "source": "Freelance Work", "amount": 800, "percentage": 9.1, "type": "freelance" },
+      { "source": "Investment Dividends", "amount": 280, "percentage": 3.2, "type": "investment" },
+      { "source": "Side Business", "amount": 170, "percentage": 1.9, "type": "business" }
+    ]
+  },
+  "accounts": [
+    {
+      "id": "ce3c254f-a337-4f7f-ba75-e1e75fc5cf35",
+      "name": "Everyday Checking",
+      "institution": "Chase",
+      "type": "CHECKING",
+      "currency": "USD",
+      "balanceCents": 1245620,
+      "availableBalanceCents": 1245620,
+      "accountNumber": "****1234",
+      "isActive": true,
+      "interestRate": 0.01
+    },
+    {
+      "id": "8a7d1b2c-4e5f-6a7b-8c9d-0e1f2a3b4c5d",
+      "name": "Premium Savings",
+      "institution": "Chase",
+      "type": "SAVINGS",
+      "currency": "USD",
+      "balanceCents": 2847592,
+      "availableBalanceCents": 2847592,
+      "accountNumber": "****5678",
+      "isActive": true,
+      "interestRate": 4.25
+    },
+    {
+      "id": "b9c8d7e6-f5a4-b3c2-d1e0-f9e8d7c6b5a4",
+      "name": "Freedom Unlimited",
+      "institution": "Chase",
+      "type": "CREDIT",
+      "currency": "USD",
+      "balanceCents": -89247,
+      "availableBalanceCents": 410753,
+      "accountNumber": "****9012",
+      "isActive": true,
+      "creditLimit": 500000,
+      "interestRate": 18.99
+    },
+    {
+      "id": "e7f6a5b4-c3d2-e1f0-a9b8-c7d6e5f4a3b2",
+      "name": "Traditional IRA",
+      "institution": "Fidelity",
+      "type": "INVESTMENT",
+      "currency": "USD",
+      "balanceCents": 4523678,
+      "availableBalanceCents": 4523678,
+      "accountNumber": "****4567",
+      "isActive": true,
+      "accountType": "IRA"
+    },
+    {
+      "id": "a9b8c7d6-e5f4-a3b2-c1d0-e9f8a7b6c5d4",
+      "name": "401(k)",
+      "institution": "Fidelity",
+      "type": "INVESTMENT",
+      "currency": "USD",
+      "balanceCents": 8976543,
+      "availableBalanceCents": 8976543,
+      "accountNumber": "****2345",
+      "isActive": true,
+      "accountType": "401K"
+    }
+  ],
+  "transactions": {
+    "paged": {
+      "content": [
+        {
+          "id": "tx001",
+          "accountId": "ce3c254f-a337-4f7f-ba75-e1e75fc5cf35",
+          "date": "2025-09-22T10:30:00.000Z",
+          "description": "STARBUCKS STORE #1234",
+          "merchant": "Starbucks",
+          "category": "Food & Dining",
+          "subcategory": "Coffee Shops",
+          "amountCents": -675,
+          "runningBalanceCents": 1245620,
+          "status": "POSTED",
+          "tags": ["coffee", "morning"],
+          "location": {
+            "city": "Seattle",
+            "state": "WA",
+            "country": "US"
+          }
+        },
+        {
+          "id": "tx002",
+          "accountId": "ce3c254f-a337-4f7f-ba75-e1e75fc5cf35",
+          "date": "2025-09-22T08:15:00.000Z",
+          "description": "SHELL GAS STATION",
+          "merchant": "Shell",
+          "category": "Transportation",
+          "subcategory": "Gas Stations",
+          "amountCents": -4520,
+          "runningBalanceCents": 1250140,
+          "status": "POSTED",
+          "tags": ["gas", "vehicle"]
+        },
+        {
+          "id": "tx003",
+          "accountId": "ce3c254f-a337-4f7f-ba75-e1e75fc5cf35",
+          "date": "2025-09-21T16:45:00.000Z",
+          "description": "WHOLE FOODS MARKET",
+          "merchant": "Whole Foods",
+          "category": "Food & Dining",
+          "subcategory": "Groceries",
+          "amountCents": -12847,
+          "runningBalanceCents": 1254660,
+          "status": "POSTED",
+          "tags": ["groceries", "organic"]
+        },
+        {
+          "id": "tx004",
+          "accountId": "ce3c254f-a337-4f7f-ba75-e1e75fc5cf35",
+          "date": "2025-09-21T14:20:00.000Z",
+          "description": "NETFLIX.COM",
+          "merchant": "Netflix",
+          "category": "Entertainment",
+          "subcategory": "Streaming Services",
+          "amountCents": -1599,
+          "runningBalanceCents": 1267507,
+          "status": "POSTED",
+          "tags": ["subscription", "entertainment"],
+          "recurring": true
+        },
+        {
+          "id": "tx005",
+          "accountId": "ce3c254f-a337-4f7f-ba75-e1e75fc5cf35",
+          "date": "2025-09-20T12:00:00.000Z",
+          "description": "SALARY DEPOSIT - ACME CORP",
+          "merchant": "ACME Corp",
+          "category": "Income",
+          "subcategory": "Salary",
+          "amountCents": 375000,
+          "runningBalanceCents": 1269106,
+          "status": "POSTED",
+          "tags": ["salary", "income"],
+          "recurring": true
+        },
+        {
+          "id": "tx006",
+          "accountId": "8a7d1b2c-4e5f-6a7b-8c9d-0e1f2a3b4c5d",
+          "date": "2025-09-20T00:01:00.000Z",
+          "description": "INTEREST PAYMENT",
+          "category": "Income",
+          "subcategory": "Interest",
+          "amountCents": 9865,
+          "runningBalanceCents": 2847592,
+          "status": "POSTED",
+          "tags": ["interest", "savings"]
+        },
+        {
+          "id": "tx007",
+          "accountId": "ce3c254f-a337-4f7f-ba75-e1e75fc5cf35",
+          "date": "2025-09-19T19:30:00.000Z",
+          "description": "UBER RIDE",
+          "merchant": "Uber",
+          "category": "Transportation",
+          "subcategory": "Rideshare",
+          "amountCents": -2340,
+          "runningBalanceCents": 894106,
+          "status": "POSTED",
+          "tags": ["rideshare", "transportation"]
+        },
+        {
+          "id": "tx008",
+          "accountId": "ce3c254f-a337-4f7f-ba75-e1e75fc5cf35",
+          "date": "2025-09-19T18:15:00.000Z",
+          "description": "OLIVE GARDEN",
+          "merchant": "Olive Garden",
+          "category": "Food & Dining",
+          "subcategory": "Restaurants",
+          "amountCents": -5678,
+          "runningBalanceCents": 896446,
+          "status": "POSTED",
+          "tags": ["restaurant", "dinner"]
+        },
+        {
+          "id": "tx009",
+          "accountId": "b9c8d7e6-f5a4-b3c2-d1e0-f9e8d7c6b5a4",
+          "date": "2025-09-19T15:22:00.000Z",
+          "description": "AMAZON.COM",
+          "merchant": "Amazon",
+          "category": "Shopping",
+          "subcategory": "Online Shopping",
+          "amountCents": -8999,
+          "runningBalanceCents": -89247,
+          "status": "POSTED",
+          "tags": ["online", "shopping"]
+        },
+        {
+          "id": "tx010",
+          "accountId": "ce3c254f-a337-4f7f-ba75-e1e75fc5cf35",
+          "date": "2025-09-18T11:45:00.000Z",
+          "description": "ELECTRIC COMPANY",
+          "merchant": "Seattle City Light",
+          "category": "Utilities",
+          "subcategory": "Electricity",
+          "amountCents": -12500,
+          "runningBalanceCents": 902124,
+          "status": "POSTED",
+          "tags": ["utilities", "electricity"],
+          "recurring": true
+        }
+      ],
+      "totalElements": 1850,
+      "totalPages": 185,
+      "size": 10,
+      "number": 0
+    }
+  },
+  "budgets": [
+    {
+      "id": "budget001",
+      "name": "Monthly Budget 2025",
+      "period": "MONTHLY",
+      "startDate": "2025-01-01T00:00:00.000Z",
+      "endDate": "2025-12-31T23:59:59.999Z",
+      "totalBudgetCents": 623456,
+      "totalSpentCents": 587234,
+      "categories": [
+        {
+          "category": "Housing",
+          "budgetCents": 220000,
+          "spentCents": 218500,
+          "remainingCents": 1500,
+          "percentUsed": 99.3,
+          "status": "at_limit"
+        },
+        {
+          "category": "Food & Dining",
+          "budgetCents": 80000,
+          "spentCents": 85000,
+          "remainingCents": -5000,
+          "percentUsed": 106.25,
+          "status": "over_budget"
+        },
+        {
+          "category": "Transportation",
+          "budgetCents": 65000,
+          "spentCents": 52300,
+          "remainingCents": 12700,
+          "percentUsed": 80.5,
+          "status": "on_track"
+        },
+        {
+          "category": "Utilities",
+          "budgetCents": 42000,
+          "spentCents": 38900,
+          "remainingCents": 3100,
+          "percentUsed": 92.6,
+          "status": "on_track"
+        },
+        {
+          "category": "Healthcare",
+          "budgetCents": 40000,
+          "spentCents": 34200,
+          "remainingCents": 5800,
+          "percentUsed": 85.5,
+          "status": "on_track"
+        },
+        {
+          "category": "Entertainment",
+          "budgetCents": 35000,
+          "spentCents": 32100,
+          "remainingCents": 2900,
+          "percentUsed": 91.7,
+          "status": "on_track"
+        },
+        {
+          "category": "Shopping",
+          "budgetCents": 50000,
+          "spentCents": 45600,
+          "remainingCents": 4400,
+          "percentUsed": 91.2,
+          "status": "on_track"
+        },
+        {
+          "category": "Insurance",
+          "budgetCents": 34000,
+          "spentCents": 34000,
+          "remainingCents": 0,
+          "percentUsed": 100.0,
+          "status": "at_limit"
+        },
+        {
+          "category": "Debt Payments",
+          "budgetCents": 30000,
+          "spentCents": 29000,
+          "remainingCents": 1000,
+          "percentUsed": 96.7,
+          "status": "on_track"
+        },
+        {
+          "category": "Miscellaneous",
+          "budgetCents": 27456,
+          "spentCents": 17634,
+          "remainingCents": 9822,
+          "percentUsed": 64.2,
+          "status": "under_budget"
+        }
+      ]
+    }
+  ],
+  "goals": [
+    {
+      "id": "goal001",
+      "name": "Emergency Fund",
+      "targetCents": 5000000,
+      "currentCents": 2847592,
+      "dueDate": "2026-12-31T23:59:59.999Z",
+      "category": "Emergency",
+      "priority": "high",
+      "status": "in_progress",
+      "completionPercentage": 56.95,
+      "monthlyContribution": 50000,
+      "projectedCompletion": "2026-08-15T00:00:00.000Z"
+    },
+    {
+      "id": "goal002",
+      "name": "Vacation to Europe",
+      "targetCents": 800000,
+      "currentCents": 325000,
+      "dueDate": "2026-06-01T00:00:00.000Z",
+      "category": "Travel",
+      "priority": "medium",
+      "status": "in_progress",
+      "completionPercentage": 40.63,
+      "monthlyContribution": 25000,
+      "projectedCompletion": "2026-04-20T00:00:00.000Z"
+    },
+    {
+      "id": "goal003",
+      "name": "House Down Payment",
+      "targetCents": 10000000,
+      "currentCents": 4523678,
+      "dueDate": "2027-12-31T23:59:59.999Z",
+      "category": "Real Estate",
+      "priority": "high",
+      "status": "in_progress",
+      "completionPercentage": 45.24,
+      "monthlyContribution": 150000,
+      "projectedCompletion": "2027-08-10T00:00:00.000Z"
+    },
+    {
+      "id": "goal004",
+      "name": "New Car Fund",
+      "targetCents": 4500000,
+      "currentCents": 4500000,
+      "dueDate": "2025-12-31T23:59:59.999Z",
+      "category": "Transportation",
+      "priority": "low",
+      "status": "completed",
+      "completionPercentage": 100.0,
+      "completedDate": "2025-08-15T00:00:00.000Z"
+    }
+  ],
+  "notifications": [
+    {
+      "id": "notif001",
+      "type": "BUDGET_ALERT",
+      "title": "Food & Dining Budget Exceeded",
+      "message": "You've spent $850 of your $800 monthly budget for Food & Dining. Consider adjusting your spending or budget.",
+      "severity": "WARNING",
+      "read": false,
+      "createdAt": "2025-09-22T09:00:00.000Z",
+      "category": "Food & Dining",
+      "actionable": true,
+      "actions": [
+        {
+          "label": "Adjust Budget",
+          "type": "navigate",
+          "url": "/budget"
+        },
+        {
+          "label": "View Transactions",
+          "type": "navigate",
+          "url": "/transactions?category=Food%20%26%20Dining"
+        }
+      ]
+    },
+    {
+      "id": "notif002",
+      "type": "GOAL_UPDATE",
+      "title": "Emergency Fund Goal Progress",
+      "message": "Great job! You're now 57% towards your Emergency Fund goal of $50,000.",
+      "severity": "INFO",
+      "read": false,
+      "createdAt": "2025-09-21T12:00:00.000Z",
+      "category": "Goals",
+      "actionable": true,
+      "actions": [
+        {
+          "label": "View Goal Details",
+          "type": "navigate",
+          "url": "/goals/goal001"
+        }
+      ]
+    },
+    {
+      "id": "notif003",
+      "type": "BILL_REMINDER",
+      "title": "Credit Card Payment Due Soon",
+      "message": "Your Capital One Venture card payment of $49.16 is due in 3 days.",
+      "severity": "WARNING",
+      "read": true,
+      "createdAt": "2025-09-19T08:00:00.000Z",
+      "category": "Bills",
+      "actionable": true,
+      "dueDate": "2025-10-08T00:00:00.000Z",
+      "actions": [
+        {
+          "label": "Pay Now",
+          "type": "action",
+          "action": "pay_bill"
+        }
+      ]
+    },
+    {
+      "id": "notif004",
+      "type": "TRANSACTION_ALERT",
+      "title": "Large Transaction Detected",
+      "message": "We noticed a $899.99 charge at Amazon. Was this you?",
+      "severity": "INFO",
+      "read": true,
+      "createdAt": "2025-09-19T15:25:00.000Z",
+      "category": "Security",
+      "actionable": true,
+      "actions": [
+        {
+          "label": "Yes, this was me",
+          "type": "action",
+          "action": "confirm_transaction"
+        },
+        {
+          "label": "Report as fraud",
+          "type": "action",
+          "action": "report_fraud"
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "id": "rule001",
+      "name": "Starbucks Auto-Category",
+      "description": "Automatically categorize Starbucks transactions as Food & Dining > Coffee Shops",
+      "isActive": true,
+      "priority": 1,
+      "conditions": [
+        {
+          "field": "merchant",
+          "operator": "contains",
+          "value": "STARBUCKS",
+          "caseSensitive": false
+        }
+      ],
+      "actions": [
+        {
+          "type": "set_category",
+          "value": "Food & Dining"
+        },
+        {
+          "type": "set_subcategory",
+          "value": "Coffee Shops"
+        },
+        {
+          "type": "add_tag",
+          "value": "coffee"
+        }
+      ],
+      "createdAt": "2025-08-15T10:00:00.000Z",
+      "lastTriggered": "2025-09-22T10:30:00.000Z",
+      "triggerCount": 127
+    },
+    {
+      "id": "rule002",
+      "name": "Gas Station Auto-Tag",
+      "description": "Add transportation tags to gas station purchases",
+      "isActive": true,
+      "priority": 2,
+      "conditions": [
+        {
+          "field": "category",
+          "operator": "equals",
+          "value": "Transportation"
+        },
+        {
+          "field": "subcategory",
+          "operator": "equals",
+          "value": "Gas Stations"
+        }
+      ],
+      "actions": [
+        {
+          "type": "add_tag",
+          "value": "gas"
+        },
+        {
+          "type": "add_tag",
+          "value": "vehicle"
+        }
+      ],
+      "createdAt": "2025-07-20T14:30:00.000Z",
+      "lastTriggered": "2025-09-22T08:15:00.000Z",
+      "triggerCount": 89
+    },
+    {
+      "id": "rule003",
+      "name": "Large Purchase Alert",
+      "description": "Send notification for purchases over $500",
+      "isActive": true,
+      "priority": 5,
+      "conditions": [
+        {
+          "field": "amount",
+          "operator": "greater_than",
+          "value": 50000
+        }
+      ],
+      "actions": [
+        {
+          "type": "send_notification",
+          "value": "Large purchase detected"
+        }
+      ],
+      "createdAt": "2025-06-10T09:00:00.000Z",
+      "lastTriggered": "2025-09-19T15:22:00.000Z",
+      "triggerCount": 23
+    }
+  ],
+  "import": {
+    "jobs": [
+      {
+        "id": "import001",
+        "filename": "chase_september_2025.csv",
+        "status": "COMPLETED",
+        "processedRows": 125,
+        "totalRows": 125,
+        "errors": 0,
+        "createdAt": "2025-09-20T14:30:00.000Z",
+        "completedAt": "2025-09-20T14:32:15.000Z",
+        "accountId": "ce3c254f-a337-4f7f-ba75-e1e75fc5cf35"
+      },
+      {
+        "id": "import002",
+        "filename": "fidelity_q3_2025.csv",
+        "status": "PROCESSING",
+        "processedRows": 42,
+        "totalRows": 87,
+        "errors": 1,
+        "createdAt": "2025-09-22T08:45:00.000Z",
+        "accountId": "e7f6a5b4-c3d2-e1f0-a9b8-c7d6e5f4a3b2"
+      },
+      {
+        "id": "import003",
+        "filename": "capital_one_august_2025.csv",
+        "status": "FAILED",
+        "processedRows": 0,
+        "totalRows": 156,
+        "errors": 12,
+        "createdAt": "2025-09-18T16:20:00.000Z",
+        "failedAt": "2025-09-18T16:22:30.000Z",
+        "accountId": "b0c9d8e7-f6a5-b4c3-d2e1-f0a9b8c7d6e5",
+        "errorMessage": "Invalid CSV format: Missing required columns"
+      }
+    ]
+  },
+  "creditScore": {
+    "current": 785,
+    "previous": 782,
+    "change": 3,
+    "lastUpdated": "2025-09-15T00:00:00.000Z",
+    "provider": "FICO",
+    "factors": [
+      {
+        "factor": "Payment History",
+        "impact": "POSITIVE",
+        "description": "You have no missed payments in the last 24 months"
+      },
+      {
+        "factor": "Credit Utilization",
+        "impact": "POSITIVE",
+        "description": "Your utilization is 18% across all cards"
+      },
+      {
+        "factor": "Length of Credit History",
+        "impact": "POSITIVE",
+        "description": "Your average account age is 6.2 years"
+      },
+      {
+        "factor": "Credit Mix",
+        "impact": "NEUTRAL",
+        "description": "You have a good mix of credit types"
+      },
+      {
+        "factor": "New Credit",
+        "impact": "NEUTRAL",
+        "description": "No recent credit inquiries"
+      }
+    ],
+    "recommendations": [
+      "Keep credit utilization below 30% on all cards",
+      "Continue making on-time payments",
+      "Consider paying down existing balances to improve utilization ratio"
+    ]
+  },
+  "netWorth": {
+    "current": 17854287,
+    "assets": {
+      "cash": 4093212,
+      "investments": 13500031,
+      "realEstate": 0,
+      "other": 0
+    },
+    "liabilities": {
+      "creditCards": 491244,
+      "loans": 0,
+      "mortgage": 0,
+      "other": 0
+    },
+    "monthlyTrend": [
+      { "month": "2025-01", "netWorth": 16542000 },
+      { "month": "2025-02", "netWorth": 16789000 },
+      { "month": "2025-03", "netWorth": 17023400 },
+      { "month": "2025-04", "netWorth": 17215600 },
+      { "month": "2025-05", "netWorth": 17456700 },
+      { "month": "2025-06", "netWorth": 17623400 },
+      { "month": "2025-07", "netWorth": 17789000 },
+      { "month": "2025-08", "netWorth": 17812000 },
+      { "month": "2025-09", "netWorth": 17854287 }
+    ]
+  }
+}
