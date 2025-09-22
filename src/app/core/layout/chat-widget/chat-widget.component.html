@@ -1,0 +1,109 @@
+<div class="chat-widget">
+  <!-- Chat Panel -->
+  <div class="chat-panel" [class.show]="isOpen()">
+    <div class="chat-header">
+      <div class="assistant-info">
+        <div class="assistant-avatar" [class.typing]="aiApi.isTyping()">
+          <span class="avatar-icon">🤖</span>
+          <div class="typing-indicator" *ngIf="aiApi.isTyping()">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+        <div class="assistant-details">
+          <h3 class="assistant-name">Ezra</h3>
+          <p class="assistant-status">
+            <span class="status-dot" [class.online]="aiApi.isConnected()"></span>
+            {{ aiApi.isTyping() ? 'Typing...' : 'AI Finance Assistant' }}
+          </p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="header-btn" (click)="startNewConversation()" title="New conversation">
+          <span>➕</span>
+        </button>
+        <button class="close-btn" (click)="toggleChat()" aria-label="Close chat">
+          <span>✕</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="chat-body" #chatBody>
+      <div class="messages-container">
+        <!-- Messages -->
+        <div class="message-group" *ngFor="let message of currentMessages()">
+          <div class="message" [class]="'message-' + message.role">
+            <div class="message-content">
+              <div class="message-text" [innerHTML]="formatMessage(message.content)"></div>
+              <div class="message-time">{{ formatTime(message.timestamp) }}</div>
+            </div>
+            <div class="message-avatar" *ngIf="message.role === 'assistant'">
+              <span>🤖</span>
+            </div>
+          </div>
+
+          <!-- Suggested responses -->
+          <div class="suggestions" *ngIf="hasSuggestions(message)">
+            <div class="suggestions-header">💡 Suggested questions:</div>
+            <div class="suggestion-buttons">
+              <button
+                class="suggestion-btn"
+                *ngFor="let suggestion of getSuggestions(message)"
+                (click)="sendSuggestion(suggestion)"
+                [disabled]="aiApi.isTyping()">
+                {{ suggestion }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Typing indicator -->
+        <div class="message-group" *ngIf="aiApi.isTyping()">
+          <div class="message message-assistant typing">
+            <div class="message-content">
+              <div class="typing-animation">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+            <div class="message-avatar">
+              <span>🤖</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chat-footer">
+      <div class="input-area">
+        <textarea
+          #messageInput
+          [(ngModel)]="currentMessage"
+          (keydown)="onKeyDown($event)"
+          placeholder="Ask Ezra anything about your finances..."
+          class="chat-input"
+          [disabled]="aiApi.isTyping()"
+          rows="1"></textarea>
+        <button
+          class="send-btn"
+          (click)="sendMessage()"
+          [disabled]="!canSendMessage()">
+          <span>{{ aiApi.isTyping() ? '⏳' : '📤' }}</span>
+        </button>
+      </div>
+      <div class="input-hint" *ngIf="!aiApi.isTyping()">
+        Try asking: "What's my spending this month?" or "Help me budget"
+      </div>
+    </div>
+  </div>
+
+  <!-- Chat Toggle Button -->
+  <button
+    class="chat-toggle"
+    [class.active]="isOpen()"
+    (click)="toggleChat()"
+    aria-label="Open AI assistant chat"
+  >
+    <span class="toggle-icon" *ngIf="!isOpen()">💬</span>
+    <span class="toggle-icon close" *ngIf="isOpen()">✕</span>
+    <div class="notification-dot" *ngIf="!isOpen() && hasUnreadMessages()"></div>
+  </button>
+</div>

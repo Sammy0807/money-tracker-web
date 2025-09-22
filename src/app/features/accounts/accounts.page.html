@@ -1,0 +1,205 @@
+<div class="accounts-container">
+  <header class="page-header">
+    <h1 class="page-title">My Accounts</h1>
+    <p class="page-subtitle">Manage and monitor all your financial accounts</p>
+    <button class="refresh-btn" (click)="refresh()">
+      <span class="refresh-icon">🔄</span>
+      Refresh Data
+    </button>
+  </header>
+
+  <!-- Account Summary Cards -->
+  <section class="account-summary" *ngIf="accounts.length > 0">
+    <div class="summary-grid">
+      <div class="summary-card total-assets">
+        <div class="summary-header">
+          <h3 class="summary-title">Total Assets</h3>
+          <span class="summary-icon">💰</span>
+        </div>
+        <div class="summary-value">{{ getTotalAssets() | currency:'USD':'symbol':'1.0-0' }}</div>
+        <div class="summary-change positive">
+          <span class="change-icon">↗️</span>
+          <span class="change-text">+4.2% this month</span>
+        </div>
+      </div>
+
+      <div class="summary-card total-liabilities">
+        <div class="summary-header">
+          <h3 class="summary-title">Total Liabilities</h3>
+          <span class="summary-icon">💳</span>
+        </div>
+        <div class="summary-value">{{ getTotalLiabilities() | currency:'USD':'symbol':'1.0-0' }}</div>
+        <div class="summary-change negative">
+          <span class="change-icon">↘️</span>
+          <span class="change-text">-2.1% this month</span>
+        </div>
+      </div>
+
+      <div class="summary-card net-worth">
+        <div class="summary-header">
+          <h3 class="summary-title">Net Worth</h3>
+          <span class="summary-icon">📊</span>
+        </div>
+        <div class="summary-value">{{ getNetWorth() | currency:'USD':'symbol':'1.0-0' }}</div>
+        <div class="summary-change positive">
+          <span class="change-icon">↗️</span>
+          <span class="change-text">+5.8% this month</span>
+        </div>
+      </div>
+
+      <div class="summary-card active-accounts">
+        <div class="summary-header">
+          <h3 class="summary-title">Active Accounts</h3>
+          <span class="summary-icon">🏦</span>
+        </div>
+        <div class="summary-value">{{ getActiveAccountsCount() }}</div>
+        <div class="summary-change neutral">
+          <span class="change-text">across {{ getInstitutionsCount() }} institutions</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Filters and Controls -->
+  <section class="account-controls">
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label for="typeFilter" class="filter-label">Account Type:</label>
+        <select id="typeFilter" class="filter-select" [(ngModel)]="selectedAccountType" (change)="filterAccounts()">
+          <option value="ALL">All Types</option>
+          <option value="CHECKING">Checking</option>
+          <option value="SAVINGS">Savings</option>
+          <option value="CREDIT">Credit Cards</option>
+          <option value="INVESTMENT">Investments</option>
+          <option value="LOAN">Loans</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="institutionFilter" class="filter-label">Institution:</label>
+        <select id="institutionFilter" class="filter-select" [(ngModel)]="selectedInstitution" (change)="filterAccounts()">
+          <option value="ALL">All Institutions</option>
+          <option *ngFor="let institution of getUniqueInstitutions()" [value]="institution">{{ institution }}</option>
+        </select>
+      </div>
+
+      <div class="view-toggle">
+        <button class="toggle-btn" [class.active]="viewMode === 'cards'" (click)="setViewMode('cards')">
+          <span class="toggle-icon">📱</span>
+          Cards
+        </button>
+        <button class="toggle-btn" [class.active]="viewMode === 'list'" (click)="setViewMode('list')">
+          <span class="toggle-icon">📋</span>
+          List
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Accounts Display -->
+  <section class="accounts-section" *ngIf="filteredAccounts.length > 0; else noAccountsOrLoading">
+    <!-- Card View -->
+    <div class="accounts-grid" *ngIf="viewMode === 'cards'">
+      <div class="account-card" *ngFor="let account of filteredAccounts" [class]="'account-' + account.type.toLowerCase()" [class.inactive]="isInactive(account)">
+        <div class="account-header">
+          <div class="account-info">
+            <h3 class="account-name">{{ account.name }}</h3>
+            <p class="account-institution">{{ account.institution }}</p>
+            <span class="account-number">{{ getAccountNumber(account) }}</span>
+          </div>
+          <div class="account-type-badge" [class]="'badge-' + account.type.toLowerCase()">{{ account.type | titlecase }}</div>
+        </div>
+
+        <div class="account-balance-section">
+          <div class="primary-balance">
+            <span class="balance-label">{{ getBalanceLabel(account.type) }}</span>
+            <span class="balance-amount" [class.negative]="account.balanceCents < 0">{{ account.balanceCents / 100 | currency:account.currency:'symbol':'1.0-0' }}</span>
+          </div>
+
+            <div class="secondary-info" *ngIf="hasAvailableBalance(account)">
+              <span class="available-label">Available Credit:</span>
+              <span class="available-amount">{{ getAvailableBalance(account) / 100 | currency:account.currency:'symbol':'1.0-0' }}</span>
+            </div>
+
+            <div class="secondary-info" *ngIf="hasInterestRate(account)">
+              <span class="rate-label">Interest Rate:</span>
+              <span class="rate-amount">{{ getInterestRate(account) | number:'1.2-2' }}%</span>
+            </div>
+        </div>
+
+        <div class="account-actions">
+          <button class="action-btn primary">View Details</button>
+          <button class="action-btn secondary">Transactions</button>
+          <button class="action-btn tertiary">⭐</button>
+        </div>
+
+        <div class="account-status" *ngIf="isInactive(account)">
+          <span class="status-indicator">⚠️ Inactive</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- List View -->
+    <div class="accounts-table" *ngIf="viewMode === 'list'">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Account</th>
+            <th>Institution</th>
+            <th>Type</th>
+            <th>Balance</th>
+            <th>Interest Rate</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let account of filteredAccounts" [class.inactive]="isInactive(account)">
+            <td>
+              <div class="account-cell">
+                <strong class="account-name">{{ account.name }}</strong>
+                <small class="account-number">{{ getAccountNumber(account) }}</small>
+              </div>
+            </td>
+            <td>{{ account.institution }}</td>
+            <td>
+              <span class="type-badge" [class]="'badge-' + account.type.toLowerCase()">{{ account.type | titlecase }}</span>
+            </td>
+            <td>
+              <span class="balance" [class.negative]="account.balanceCents < 0">{{ account.balanceCents / 100 | currency:account.currency:'symbol':'1.0-0' }}</span>
+            </td>
+            <td>
+              <span *ngIf="hasInterestRate(account)">{{ getInterestRate(account) | number:'1.2-2' }}%</span>
+              <span *ngIf="!hasInterestRate(account)">—</span>
+            </td>
+            <td>
+              <span class="status-badge" [class.active]="isActive(account)" [class.inactive]="isInactive(account)">{{ isActive(account) ? 'Active' : 'Inactive' }}</span>
+            </td>
+            <td>
+              <div class="table-actions">
+                <button class="action-btn-small">View</button>
+                <button class="action-btn-small">Edit</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <ng-template #noAccountsOrLoading>
+    <div class="empty-state" *ngIf="!api.loading(); else loading">
+      <div class="empty-icon">🏦</div>
+      <h3 class="empty-title">No accounts found</h3>
+      <p class="empty-message">Try adjusting your filters or add a new account to get started.</p>
+      <button class="empty-action-btn">Add Account</button>
+    </div>
+
+    <ng-template #loading>
+      <div class="loading-state">
+        <div class="loading-spinner">⏳</div>
+        <p class="loading-message">Loading your accounts...</p>
+      </div>
+    </ng-template>
+  </ng-template>
+</div>

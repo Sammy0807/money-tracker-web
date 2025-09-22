@@ -1,0 +1,362 @@
+<div class="analytics-container">
+  <header class="page-header">
+    <h1 class="page-title">Financial Analytics</h1>
+    <p class="page-subtitle">Deep insights into your financial patterns and trends</p>
+    <button class="refresh-btn" (click)="refresh()">
+      <span class="refresh-icon">🔄</span>
+      Refresh Data
+    </button>
+  </header>
+
+  <!-- KPI Dashboard -->
+  <section class="kpi-dashboard">
+    <h2 class="section-title">📊 Key Performance Indicators</h2>
+    <div class="kpi-grid" *ngIf="kpis?.length">
+      <div class="kpi-card" *ngFor="let kpi of kpis" [attr.data-trend]="kpi.trend">
+        <div class="kpi-header">
+          <h3 class="kpi-name">{{ kpi.name }}</h3>
+          <span class="kpi-period">{{ kpi.period }}</span>
+        </div>
+        <div class="kpi-value">
+          <span class="value">{{ formatKpiValue(kpi) }}</span>
+          <div class="kpi-delta" [class]="kpi.trend" *ngIf="kpi.delta !== undefined">
+            <span class="delta-icon">{{ getDeltaIcon(kpi.trend) }}</span>
+            <span class="delta-value">{{ kpi.delta | number:'1.1-1' }}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Charts Grid -->
+  <div class="charts-grid">
+    <!-- Monthly Trends Chart -->
+    <section class="chart-card trends-card">
+      <div class="chart-header">
+        <h2 class="chart-title">📈 Monthly Trends</h2>
+        <div class="chart-controls">
+          <select class="metric-selector" [(ngModel)]="selectedMetric" (change)="onMetricChange()">
+            <option value="netWorth">Net Worth</option>
+            <option value="income">Income</option>
+            <option value="expenses">Expenses</option>
+            <option value="savings">Savings</option>
+          </select>
+        </div>
+      </div>
+      <div class="chart-content" *ngIf="monthlyTrends?.length">
+        <div class="trend-chart">
+          <div class="trend-bars">
+            <div class="trend-bar" *ngFor="let month of monthlyTrends; let i = index">
+              <div class="bar-container">
+                <div class="bar" [style.height.%]="getBarHeight(month, selectedMetric)" [class]="getBarClass(selectedMetric)"></div>
+                <span class="bar-value">${{ getMetricValue(month, selectedMetric) | number:'1.0-0' }}</span>
+              </div>
+              <span class="month-label">{{ formatMonth(month.month) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Category Breakdown -->
+    <section class="chart-card">
+      <div class="chart-header">
+        <h2 class="chart-title">🧾 Expense Breakdown</h2>
+        <p class="chart-subtitle">Top spending categories and trends</p>
+      </div>
+      <div class="category-chart" *ngIf="categoryBreakdown?.length; else categoryLoading">
+        <div class="category-list">
+          <div class="category-item" *ngFor="let category of categoryBreakdown">
+            <div class="category-info">
+              <div class="category-icon">{{ getCategoryIcon(category.category) }}</div>
+              <div class="category-details">
+                <span class="category-name">{{ category.category }}</span>
+                <span class="category-trend" [class]="category.trend">{{ category.trend | titlecase }}</span>
+              </div>
+            </div>
+            <div class="category-metrics">
+              <span class="category-amount">${{ category.amount | number:'1.0-0' }}</span>
+              <span class="category-percentage">{{ category.percentage | number:'1.1-1' }}%</span>
+            </div>
+            <div class="category-bar">
+              <div class="bar-fill" [style.width.%]="category.percentage"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #categoryLoading>
+        <div class="loading"><div class="spinner"></div>Loading category data...</div>
+      </ng-template>
+    </section>
+
+    <!-- Income Analysis -->
+    <section class="chart-card">
+      <div class="chart-header">
+        <h2 class="chart-title">💼 Income Analysis</h2>
+        <p class="chart-subtitle">Sources and distribution</p>
+      </div>
+      <div class="income-chart" *ngIf="incomeStreams?.length; else incomeLoading">
+        <div class="income-summary total-income">
+          <span class="amount">${{ getTotalIncome() | number:'1.0-0' }}</span>
+          <span class="label">Total Monthly Income</span>
+        </div>
+        <div class="income-sources">
+          <div class="income-item" *ngFor="let source of incomeStreams">
+            <div class="source-info">
+              <div class="source-icon">{{ getIncomeIcon(source.type) }}</div>
+              <div class="source-details">
+                <span class="source-name">{{ source.name }}</span>
+                <span class="source-type">{{ source.type | titlecase }}</span>
+              </div>
+            </div>
+            <div class="source-metrics">
+              <span class="source-amount">${{ source.amount | number:'1.0-0' }}</span>
+              <span class="source-percentage">{{ (source.amount / getTotalIncome()) * 100 | number:'1.1-1' }}%</span>
+            </div>
+            <div class="income-bar">
+              <div class="bar-fill" [attr.data-type]="source.type" [style.width.%]="(source.amount / getTotalIncome()) * 100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #incomeLoading>
+        <div class="loading"><div class="spinner"></div>Loading income data...</div>
+      </ng-template>
+    </section>
+
+    <!-- Savings Analysis -->
+    <section class="chart-card">
+      <div class="chart-header">
+        <h2 class="chart-title">💰 Savings Analysis</h2>
+        <p class="chart-subtitle">Rates and composition</p>
+      </div>
+      <div *ngIf="monthlyTrends?.length; else savingsLoading">
+        <div class="savings-metrics">
+          <div class="metric-item">
+            <span class="metric-label">Avg. Savings Rate</span>
+            <span class="metric-value">{{ getAverageSavingsRate() | number:'1.1-1' }}%</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">Avg. Monthly Savings</span>
+            <span class="metric-value">${{ getAverageSavings() | number:'1.0-0' }}</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">Trend</span>
+            <span class="metric-value trend" [class]="getSavingsTrend()">{{ getSavingsTrend() | titlecase }}</span>
+          </div>
+        </div>
+        <div class="savings-chart">
+          <div class="savings-bars">
+            <div class="savings-month" *ngFor="let month of monthlyTrends">
+              <div class="savings-bar">
+                <div class="income-portion" [style.height.%]="(month.income / getMaxIncome()) * 100"></div>
+                <div class="expense-portion" [style.height.%]="(month.expenses / getMaxIncome()) * 100"></div>
+                <div class="savings-portion" [style.height.%]="(month.savings / getMaxIncome()) * 100"></div>
+              </div>
+              <span class="bar-value">${{ month.savings | number:'1.0-0' }}</span>
+              <span class="month-label">{{ formatMonth(month.month) }}</span>
+            </div>
+          </div>
+          <div class="chart-legend">
+            <div class="legend-item"><span class="legend-color income"></span><span class="legend-label">Income</span></div>
+            <div class="legend-item"><span class="legend-color expenses"></span><span class="legend-label">Expenses</span></div>
+            <div class="legend-item"><span class="legend-color savings"></span><span class="legend-label">Savings</span></div>
+          </div>
+        </div>
+      </div>
+      <ng-template #savingsLoading>
+        <div class="loading"><div class="spinner"></div>Loading savings data...</div>
+      </ng-template>
+    </section>
+
+    <!-- Net Worth Growth -->
+    <section class="chart-card">
+      <div class="chart-header">
+        <h2 class="chart-title">🏦 Net Worth Growth</h2>
+        <p class="chart-subtitle">Progress and performance</p>
+      </div>
+      <div class="networth-chart" *ngIf="monthlyTrends?.length; else networthLoading">
+        <div class="growth-visualization">
+          <div class="networth-line">
+            <div *ngFor="let point of monthlyTrends; let i = index"
+                 class="networth-point"
+                 [style.left.%]="(i / (monthlyTrends.length - 1)) * 100"
+                 [style.bottom.%]="((point.netWorth - getMinNetWorth()) / (getMaxNetWorth() - getMinNetWorth())) * 100"
+                 [title]="formatMonth(point.month) + ': $' + point.netWorth">
+            </div>
+          </div>
+        </div>
+        <div class="networth-stats">
+          <div class="stat-item">
+            <span class="stat-label">Current Net Worth</span>
+            <span class="stat-value">${{ getCurrentNetWorth() | number:'1.0-0' }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Growth</span>
+            <span class="stat-value positive">${{ getNetWorthGrowth() | number:'1.0-0' }}</span>
+          </div>
+            <div class="stat-item">
+              <span class="stat-label">Growth Rate</span>
+              <span class="stat-value positive">{{ getNetWorthGrowthRate() | number:'1.1-1' }}%</span>
+            </div>
+        </div>
+      </div>
+      <ng-template #networthLoading>
+        <div class="loading"><div class="spinner"></div>Loading net worth data...</div>
+      </ng-template>
+    </section>
+
+    <!-- Cash Flow Analysis -->
+    <section class="chart-card">
+      <div class="chart-header">
+        <h2 class="chart-title">💵 Cash Flow Analysis</h2>
+        <p class="chart-subtitle">Inflow vs outflow trends</p>
+      </div>
+      <div *ngIf="cashFlowData?.length; else cashflowLoading">
+        <div class="cashflow-metrics metric-summary">
+          <div class="flow-item inflow">
+            <span class="flow-label">Avg Inflow</span>
+            <span class="flow-value">${{ getAverageCashFlow('inflow') | number:'1.0-0' }}</span>
+          </div>
+          <div class="flow-item outflow">
+            <span class="flow-label">Avg Outflow</span>
+            <span class="flow-value">${{ getAverageCashFlow('outflow') | number:'1.0-0' }}</span>
+          </div>
+          <div class="flow-item net">
+            <span class="flow-label">Avg Net</span>
+            <span class="flow-value">${{ getAverageCashFlow('net') | number:'1.0-0' }}</span>
+          </div>
+        </div>
+        <div class="cashflow-chart">
+          <div class="flow-bars">
+            <div class="flow-month" *ngFor="let month of cashFlowData">
+              <div class="flow-bar-container">
+                <div class="inflow-bar" [style.height.%]="(month.inflow / getMaxCashFlow()) * 100">
+                  <span class="bar-label">${{ month.inflow | number:'1.0-0' }}</span>
+                </div>
+                <div class="outflow-bar" [style.height.%]="(month.outflow / getMaxCashFlow()) * 100">
+                  <span class="bar-label">${{ month.outflow | number:'1.0-0' }}</span>
+                </div>
+              </div>
+              <span class="month-label">{{ formatMonth(month.month) }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #cashflowLoading>
+        <div class="loading"><div class="spinner"></div>Loading cash flow data...</div>
+      </ng-template>
+    </section>
+
+    <!-- Investment Performance -->
+    <section class="chart-card">
+      <div class="chart-header">
+        <h2 class="chart-title">📈 Investment Performance</h2>
+        <p class="chart-subtitle">Portfolio and returns</p>
+      </div>
+      <div *ngIf="investmentData?.length; else investmentLoading">
+        <div class="portfolio-summary">
+          <div class="portfolio-value">
+            <span class="value">${{ getTotalPortfolioValue() | number:'1.0-0' }}</span>
+            <span class="label">Total Portfolio Value</span>
+          </div>
+          <div class="portfolio-gain">
+            <span class="gain" [class.positive]="getTotalGainLoss() >= 0" [class.negative]="getTotalGainLoss() < 0">
+              ${{ getTotalGainLoss() | number:'1.0-0' }}
+            </span>
+            <span class="label">Total Gain/Loss</span>
+          </div>
+        </div>
+        <div class="investment-list">
+          <div class="investment-item" *ngFor="let asset of investmentData">
+            <div class="asset-info">
+              <span class="asset-name">{{ asset.name }}</span>
+              <span class="asset-allocation">Allocation: {{ asset.allocation | number:'1.1-1' }}%</span>
+            </div>
+            <div class="asset-performance">
+              <span class="asset-return" [class.positive]="asset.gainLoss >= 0" [class.negative]="asset.gainLoss < 0">
+                {{ asset.gainLoss | number:'1.1-1' }}%
+              </span>
+              <span class="asset-value">${{ asset.value | number:'1.0-0' }}</span>
+            </div>
+            <div class="allocation-bar">
+              <div class="bar-fill" [style.width.%]="asset.allocation"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #investmentLoading>
+        <div class="loading"><div class="spinner"></div>Loading investment data...</div>
+      </ng-template>
+    </section>
+
+    <!-- Budget Variance -->
+    <section class="chart-card">
+      <div class="chart-header">
+        <h2 class="chart-title">🧾 Budget Variance</h2>
+        <p class="chart-subtitle">Spending vs plan</p>
+      </div>
+      <div *ngIf="budgetVariance?.length; else varianceLoading">
+        <div class="variance-summary">
+          <div class="summary-stat">
+            <span class="stat-label">Over Budget</span>
+            <span class="stat-value over">{{ getCategoriesOverBudget() }}</span>
+          </div>
+          <div class="summary-stat">
+            <span class="stat-label">Under Budget</span>
+            <span class="stat-value under">{{ getCategoriesUnderBudget() }}</span>
+          </div>
+          <div class="summary-stat">
+            <span class="stat-label">Net Variance</span>
+            <span class="stat-value" [class.over]="getTotalVariance() > 0" [class.under]="getTotalVariance() < 0">
+              {{ getTotalVariance() | number:'1.0-0' }}
+            </span>
+          </div>
+        </div>
+        <div class="variance-list">
+          <div class="variance-item" *ngFor="let item of budgetVariance" [class.over-budget]="item.variance > 0" [class.under-budget]="item.variance < 0" [class.on-budget]="item.variance === 0">
+            <div class="category-info">
+              <span class="category-name">{{ item.category }}</span>
+              <span class="budget-amount">Budget: ${{ item.budget | number:'1.0-0' }}</span>
+            </div>
+            <div class="variance-metrics">
+              <span class="actual-amount">Actual: ${{ item.actual | number:'1.0-0' }}</span>
+              <span class="variance-amount">Variance: ${{ item.variance | number:'1.0-0' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #varianceLoading>
+        <div class="loading"><div class="spinner"></div>Loading variance data...</div>
+      </ng-template>
+    </section>
+
+    <!-- Financial Ratios -->
+    <section class="chart-card">
+      <div class="chart-header">
+        <h2 class="chart-title">⚖️ Financial Ratios</h2>
+        <p class="chart-subtitle">Health indicators</p>
+      </div>
+      <div *ngIf="financialRatios; else ratiosLoading">
+        <div class="ratios-grid">
+          <div class="ratio-item" *ngFor="let ratio of getFormattedRatios()">
+            <div class="ratio-header">
+              <span class="ratio-name">{{ ratio.name }}</span>
+              <span class="ratio-status" [class]="'ratio-status ' + ratio.status">{{ ratio.status | titlecase }}</span>
+            </div>
+            <div class="ratio-value">
+              <span class="value">{{ ratio.displayValue }}</span>
+              <span class="benchmark">Benchmark: {{ ratio.benchmark }}</span>
+            </div>
+            <div class="ratio-bar">
+              <div class="bar-fill" [class]="'bar-fill ' + ratio.status" [style.width.%]="ratio.percentage"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #ratiosLoading>
+        <div class="loading"><div class="spinner"></div>Loading ratios...</div>
+      </ng-template>
+    </section>
+  </div>
+</div>

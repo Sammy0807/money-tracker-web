@@ -1,0 +1,53 @@
+.dashboard-container { max-width: 1200px; margin: 0 auto; }
+.page-header { margin-bottom: var(--space-2xl); }
+.page-title { font-size: 2rem; font-weight: 700; color: var(--text-primary); margin-bottom: var(--space-sm); background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.page-subtitle { font-size: 1rem; color: var(--text-muted); margin: 0; }
+.kpi-section { margin-bottom: var(--space-2xl); }
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--space-lg); }
+.kpi-card { background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--radius-xl); padding: var(--space-xl); box-shadow: var(--shadow-sm); transition: all var(--transition-base); position: relative; overflow: hidden; }
+.kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: var(--primary-gradient); transform: scaleX(0); transition: transform var(--transition-base); }
+.kpi-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.kpi-card:hover::before { transform: scaleX(1); }
+.kpi-header { display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-lg); }
+.kpi-icon { width: 48px; height: 48px; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; font-size: 1.5rem; background: var(--bg-tertiary); }
+.kpi-icon[data-type=balance] { background: linear-gradient(135deg,#10b981,#059669); }
+.kpi-icon[data-type=income] { background: linear-gradient(135deg,#3b82f6,#1d4ed8); }
+.kpi-icon[data-type=expenses] { background: linear-gradient(135deg,#ef4444,#dc2626); }
+.kpi-icon[data-type=savings] { background: linear-gradient(135deg,#f59e0b,#d97706); }
+.kpi-title { font-size: .875rem; font-weight: 600; color: var(--text-secondary); margin: 0; text-transform: uppercase; letter-spacing: .05em; }
+.kpi-value { display: flex; align-items: baseline; justify-content: space-between; }
+.value-primary { font-size: 2rem; font-weight: 700; color: var(--text-primary); line-height: 1; }
+.kpi-delta { display: flex; align-items: center; gap: var(--space-xs); padding: var(--space-xs) var(--space-sm); border-radius: var(--radius-sm); font-size: .75rem; font-weight: 600; }
+.kpi-delta.positive { background: rgba(16,185,129,.1); color: var(--success-500); }
+.kpi-delta.negative { background: rgba(239,68,68,.1); color: var(--error-500); }
+.content-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(400px,1fr)); gap: var(--space-lg); margin-bottom: var(--space-2xl); }
+.overview-card { background: var(--bg-primary); border: 1px solid var(--border-light); border-radius: var(--radius-xl); padding: var(--space-xl); box-shadow: var(--shadow-sm); transition: all var(--transition-base); }
+.overview-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-lg); }
+.card-title { font-size: 1.125rem; font-weight: 600; color: var(--text-primary); margin: 0; }
+.card-subtitle { font-size: .875rem; color: var(--text-secondary); }
+.net-worth-card { grid-column: span 2; }
+.net-worth-summary { text-align: center; }
+.net-worth-total .amount { display: block; font-size: 3rem; font-weight: 700; background: var(--primary-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; }
+.net-worth-total .growth { font-size: 1rem; color: var(--text-secondary); margin-top: var(--space-sm); }
+.net-worth-total .growth.positive { color: var(--success-color); }
+.net-worth-breakdown { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-lg); margin-top: var(--space-lg); }
+.breakdown-item { padding: var(--space-md); border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border-light); }
+.breakdown-item.assets { background: linear-gradient(135deg,rgba(16,185,129,.1),rgba(5,150,105,.1)); border-color: var(--success-color); }
+.breakdown-item.liabilities { background: linear-gradient(135deg,rgba(245,158,11,.1),rgba(217,119,6,.1)); border-color: var(--warning-color); }
+.breakdown-item .label { display: block; font-size: .875rem; font-weight: 500; color: var(--text-secondary); margin-bottom: var(--space-xs); }
+.breakdown-item .amount { display: block; font-size: 1.25rem; font-weight: 600; color: var(--text-primary); }
+.accounts-list,.transactions-list,.goals-list { display: flex; flex-direction: column; gap: var(--space-md); }
+.account-item,.transaction-item,.goal-item { display: flex; align-items: center; justify-content: space-between; padding: var(--space-md); background: var(--bg-tertiary); border-radius: var(--radius-md); border: 1px solid var(--border-light); transition: all var(--transition-base); }
+.account-item:hover,.transaction-item:hover,.goal-item:hover { background: var(--bg-secondary); transform: translateX(4px); }
+.account-info,.transaction-details,.goal-info { display: flex; flex-direction: column; gap: var(--space-xs); }
+.account-name,.transaction-merchant,.goal-name { font-weight: 500; color: var(--text-primary); }
+.account-institution,.transaction-category,.goal-progress { font-size: .875rem; color: var(--text-secondary); }
+.account-balance,.transaction-amount { font-weight: 600; color: var(--text-primary); }
+.account-balance.negative,.transaction-amount.negative { color: var(--danger-color); }
+.transaction-amount.positive { color: var(--success-color); }
+.transaction-item { display: grid; grid-template-columns: auto 1fr auto; gap: var(--space-md); align-items: center; }
+.transaction-icon { font-size: 1.25rem; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; background: var(--accent-gradient); border-radius: var(--radius-md); }
+.view-all-link { display: inline-flex; align-items: center; gap: var(--space-xs); font-size: .875rem; font-weight: 500; color: var(--primary-color); text-decoration: none; padding: var(--space-sm) 0; transition: color var(--transition-base); margin-top: var(--space-md); }
+.view-all-link:hover { color: var(--primary-color-dark); }
+@media (max-width: 768px){ .content-grid { grid-template-columns: 1fr; } .net-worth-card { grid-column: span 1; } .kpi-grid { grid-template-columns: 1fr; } .budget-categories { grid-template-columns: 1fr; } .net-worth-breakdown { grid-template-columns: 1fr; } }

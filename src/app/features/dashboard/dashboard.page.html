@@ -1,0 +1,202 @@
+<div class="dashboard-container">
+  <header class="page-header">
+    <h1 class="page-title">Financial Dashboard</h1>
+    <p class="page-subtitle">Welcome back! Here's your complete financial overview.</p>
+  </header>
+
+  <!-- KPI Cards Section -->
+  <section class="kpi-section">
+    <div class="kpi-grid">
+      <div class="kpi-card" *ngFor="let k of kpis$(); trackBy: trackByKpi">
+        <div class="kpi-header">
+          <span class="kpi-icon" [attr.data-type]="getKpiType(k.name)">
+            {{ getKpiIcon(k.name) }}
+          </span>
+          <h3 class="kpi-title">{{ k.name }}</h3>
+        </div>
+        <div class="kpi-value">
+          <span class="value-primary">{{ formatKpiValue(k.value, k.name) }}</span>
+          <div class="kpi-delta" *ngIf="k.delta !== undefined"
+               [class.positive]="k.delta > 0" [class.negative]="k.delta < 0">
+            <span class="delta-icon">{{ k.delta > 0 ? '↗' : '↘' }}</span>
+            <span class="delta-value">{{ k.delta | number:'1.0-2' }}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Grid -->
+  <div class="content-grid">
+    <!-- Net Worth Overview -->
+    <section class="overview-card net-worth-card" *ngIf="netWorth">
+      <div class="card-header">
+        <h2 class="card-title">💎 Net Worth Overview</h2>
+        <span class="card-subtitle">Your financial snapshot</span>
+      </div>
+      <div class="net-worth-summary">
+        <div class="net-worth-total">
+          <span class="amount">${{ (netWorth?.current / 100) | number:'1.0-0' }}</span>
+          <span class="growth" [class.positive]="netWorthGrowth > 0">
+            {{ netWorthGrowth > 0 ? '+' : '' }}${{ getAbsoluteValue(netWorthGrowth / 100) | number:'1.0-0' }} this month
+          </span>
+        </div>
+        <div class="net-worth-breakdown">
+          <div class="breakdown-item assets">
+            <span class="label">Assets</span>
+            <span class="amount">${{ ((netWorth?.breakdown?.assets || 0) / 100) | number:'1.0-0' }}</span>
+          </div>
+          <div class="breakdown-item liabilities">
+            <span class="label">Liabilities</span>
+            <span class="amount">${{ ((netWorth?.breakdown?.liabilities || 0) / 100) | number:'1.0-0' }}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Account Balances -->
+    <section class="overview-card accounts-card" *ngIf="accounts">
+      <div class="card-header">
+        <h2 class="card-title">🏦 Account Balances</h2>
+        <span class="card-subtitle">{{ accounts.length }} active accounts</span>
+      </div>
+      <div class="accounts-list">
+        <div class="account-item" *ngFor="let account of accounts.slice(0, 5)">
+          <div class="account-info">
+            <span class="account-name">{{ account.name }}</span>
+            <span class="account-institution">{{ account.institution }}</span>
+          </div>
+          <div class="account-balance" [class.negative]="account.balanceCents < 0">
+            ${{ (account.balanceCents / 100) | number:'1.0-2' }}
+          </div>
+        </div>
+        <a href="/accounts" class="view-all-link">View all accounts →</a>
+      </div>
+    </section>
+
+    <!-- Monthly Spending Breakdown -->
+    <section class="overview-card spending-card" *ngIf="categoryBreakdown">
+      <div class="card-header">
+        <h2 class="card-title">📊 Spending Breakdown</h2>
+        <span class="card-subtitle">This month's categories</span>
+      </div>
+      <div class="spending-chart">
+        <div class="category-item" *ngFor="let category of categoryBreakdown.slice(0, 6)">
+          <div class="category-info">
+            <span class="category-name">{{ category.category }}</span>
+            <span class="category-percentage">{{ category.percentage }}%</span>
+          </div>
+          <div class="category-bar">
+            <div class="bar-fill" [style.width.%]="category.percentage"></div>
+          </div>
+          <span class="category-amount">${{ category.amount | number:'1.0-0' }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Recent Transactions -->
+    <section class="overview-card transactions-card" *ngIf="recentTransactions">
+      <div class="card-header">
+        <h2 class="card-title">💳 Recent Transactions</h2>
+        <span class="card-subtitle">Last 5 transactions</span>
+      </div>
+      <div class="transactions-list">
+        <div class="transaction-item" *ngFor="let tx of recentTransactions">
+          <div class="transaction-icon">{{ getTransactionIcon(tx.category) }}</div>
+          <div class="transaction-details">
+            <span class="transaction-merchant">{{ tx.merchant || tx.description }}</span>
+            <span class="transaction-category">{{ tx.category }}</span>
+          </div>
+          <div class="transaction-amount" [class.negative]="tx.amountCents < 0" [class.positive]="tx.amountCents > 0">
+            ${{ (tx.amountCents / 100) | number:'1.0-2' }}
+          </div>
+        </div>
+        <a href="/transactions" class="view-all-link">View all transactions →</a>
+      </div>
+    </section>
+
+    <!-- Goals Progress -->
+    <section class="overview-card goals-card" *ngIf="goals">
+      <div class="card-header">
+        <h2 class="card-title">🎯 Goals Progress</h2>
+        <span class="card-subtitle">{{ getActiveGoalsCount() }} active goals</span>
+      </div>
+      <div class="goals-list">
+        <div class="goal-item" *ngFor="let goal of goals.slice(0, 3)">
+          <div class="goal-info">
+            <span class="goal-name">{{ goal.name }}</span>
+            <span class="goal-progress">{{ goal.completionPercentage | number:'1.0-1' }}% complete</span>
+          </div>
+          <div class="goal-bar">
+            <div class="bar-fill" [style.width.%]="goal.completionPercentage"
+                 [class.completed]="goal.status === 'completed'"></div>
+          </div>
+          <div class="goal-amounts">
+            <span class="current">${{ (goal.currentCents / 100) | number:'1.0-0' }}</span>
+            <span class="target">of ${{ (goal.targetCents / 100) | number:'1.0-0' }}</span>
+          </div>
+        </div>
+        <a href="/profile" class="view-all-link">Manage goals →</a>
+      </div>
+    </section>
+
+    <!-- Credit Score -->
+    <section class="overview-card credit-card" *ngIf="creditScore">
+      <div class="card-header">
+        <h2 class="card-title">📈 Credit Score</h2>
+        <span class="card-subtitle">FICO Score</span>
+      </div>
+      <div class="credit-score-display">
+        <div class="score-circle">
+          <div class="score-number">{{ creditScore.current }}</div>
+          <div class="score-change" [class.positive]="creditScore.change > 0">
+            {{ creditScore.change > 0 ? '+' : '' }}{{ creditScore.change }}
+          </div>
+        </div>
+        <div class="score-factors">
+          <div class="factor" *ngFor="let factor of creditScore.factors.slice(0, 3)">
+            <span class="factor-name">{{ factor.factor }}</span>
+            <span class="factor-impact" [class]="factor.impact.toLowerCase()">
+              {{ factor.impact }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Budget Status -->
+    <section class="overview-card budget-card" *ngIf="budgetStatus">
+      <div class="card-header">
+        <h2 class="card-title">💰 Budget Status</h2>
+        <span class="card-subtitle">{{ getBudgetStatusText() }}</span>
+      </div>
+      <div class="budget-overview">
+        <div class="budget-summary">
+          <div class="budget-total">
+            <span class="spent">${{ (budgetStatus.totalSpentCents / 100) | number:'1.0-0' }}</span>
+            <span class="of">of</span>
+            <span class="budget">${{ (budgetStatus.totalBudgetCents / 100) | number:'1.0-0' }}</span>
+          </div>
+          <div class="budget-percentage">
+            {{ (budgetStatus.totalSpentCents / budgetStatus.totalBudgetCents * 100) | number:'1.0-1' }}% used
+          </div>
+        </div>
+        <div class="budget-categories">
+          <div class="category-status" *ngFor="let cat of budgetStatus.categories.slice(0, 4)"
+               [class]="cat.status.replace('_', '-')">
+            <span class="category-name">{{ cat.category }}</span>
+            <span class="category-used">{{ cat.percentUsed | number:'1.0-0' }}%</span>
+          </div>
+        </div>
+      </div>
+      <a href="/budget" class="view-all-link">Manage budget →</a>
+    </section>
+  </div>
+
+  <ng-template #loading>
+    <div class="loading">
+      <div class="spinner"></div>
+      <span>Loading your financial overview...</span>
+    </div>
+  </ng-template>
+</div>
