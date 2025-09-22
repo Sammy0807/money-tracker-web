@@ -13,15 +13,25 @@ export class AccountsApi {
   loading = signal(false);
 
   list() {
+    console.log('AccountsApi: list() called, useMock:', environment.useMock);
     this.loading.set(true);
 
     if (environment.useMock) {
+      console.log('AccountsApi: using mock data');
       return this.mockService.getMockData<Account[]>('accounts').subscribe({
-        next: (data) => { this.accounts.set(data); this.loading.set(false); },
-        error: () => this.loading.set(false)
+        next: (data) => {
+          console.log('AccountsApi: received mock data:', data);
+          this.accounts.set(data);
+          this.loading.set(false);
+        },
+        error: (error) => {
+          console.error('AccountsApi: mock data error:', error);
+          this.loading.set(false);
+        }
       });
     }
 
+    console.log('AccountsApi: using real API');
     return this.http.get<Account[]>(API.accounts).subscribe({
       next: (data) => { this.accounts.set(data); this.loading.set(false); },
       error: () => this.loading.set(false)

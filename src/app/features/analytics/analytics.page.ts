@@ -223,9 +223,156 @@ import { MockDataService } from '../../core/api/mock-loader';
             </div>
           </div>
         </section>
-      </div>
 
-      <!-- Loading State -->
+        <!-- Cash Flow Analysis -->
+        <section class="chart-card cashflow-card">
+          <div class="chart-header">
+            <h2 class="chart-title">💰 Cash Flow Analysis</h2>
+            <span class="chart-subtitle">Inflow vs Outflow trends</span>
+          </div>
+          <div class="chart-content" *ngIf="cashFlowData">
+            <div class="cashflow-metrics">
+              <div class="metric-summary">
+                <div class="flow-item inflow">
+                  <span class="flow-label">Average Inflow</span>
+                  <span class="flow-value">\${{ getAverageCashFlow('inflow') | number:'1.0-0' }}</span>
+                </div>
+                <div class="flow-item outflow">
+                  <span class="flow-label">Average Outflow</span>
+                  <span class="flow-value">\${{ getAverageCashFlow('outflow') | number:'1.0-0' }}</span>
+                </div>
+                <div class="flow-item net">
+                  <span class="flow-label">Net Cash Flow</span>
+                  <span class="flow-value">\${{ getAverageCashFlow('netCashFlow') | number:'1.0-0' }}</span>
+                </div>
+              </div>
+            </div>
+            <div class="cashflow-chart">
+              <div class="flow-bars">
+                <div class="flow-month" *ngFor="let month of cashFlowData.slice(-6)">
+                  <div class="flow-bar-container">
+                    <div class="inflow-bar" [style.height.%]="(month.inflow / getMaxCashFlow()) * 100">
+                      <span class="bar-label">\${{ month.inflow | number:'1.0-0' }}</span>
+                    </div>
+                    <div class="outflow-bar" [style.height.%]="(month.outflow / getMaxCashFlow()) * 100">
+                      <span class="bar-label">\${{ month.outflow | number:'1.0-0' }}</span>
+                    </div>
+                  </div>
+                  <span class="month-label">{{ formatMonth(month.month) }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Investment Performance -->
+        <section class="chart-card investment-card">
+          <div class="chart-header">
+            <h2 class="chart-title">📈 Investment Portfolio</h2>
+            <span class="chart-subtitle">Asset allocation and performance</span>
+          </div>
+          <div class="chart-content" *ngIf="investmentData">
+            <div class="portfolio-summary">
+              <div class="portfolio-value">
+                <span class="value">\${{ getTotalPortfolioValue() | number:'1.0-0' }}</span>
+                <span class="label">Total Portfolio Value</span>
+              </div>
+              <div class="portfolio-gain">
+                <span class="gain" [class.positive]="getTotalGainLoss() > 0" [class.negative]="getTotalGainLoss() < 0">
+                  {{ getTotalGainLoss() > 0 ? '+' : '' }}\${{ getTotalGainLoss() | number:'1.0-0' }}
+                </span>
+                <span class="label">Total Gain/Loss</span>
+              </div>
+            </div>
+            <div class="investment-list">
+              <div class="investment-item" *ngFor="let asset of investmentData">
+                <div class="asset-info">
+                  <span class="asset-name">{{ asset.asset }}</span>
+                  <span class="asset-allocation">{{ asset.allocation | number:'1.1-1' }}% allocation</span>
+                </div>
+                <div class="asset-performance">
+                  <span class="asset-return" [class.positive]="asset.ytdReturn > 0" [class.negative]="asset.ytdReturn < 0">
+                    {{ asset.ytdReturn > 0 ? '+' : '' }}{{ asset.ytdReturn | number:'1.1-1' }}%
+                  </span>
+                  <span class="asset-value">\${{ asset.value | number:'1.0-0' }}</span>
+                </div>
+                <div class="allocation-bar">
+                  <div class="bar-fill" [style.width.%]="asset.allocation"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Budget Variance -->
+        <section class="chart-card variance-card">
+          <div class="chart-header">
+            <h2 class="chart-title">🎯 Budget vs Actual</h2>
+            <span class="chart-subtitle">Performance against budget</span>
+          </div>
+          <div class="chart-content" *ngIf="budgetVariance">
+            <div class="variance-summary">
+              <div class="summary-stat">
+                <span class="stat-label">Categories Over Budget</span>
+                <span class="stat-value over">{{ getCategoriesOverBudget() }}</span>
+              </div>
+              <div class="summary-stat">
+                <span class="stat-label">Categories Under Budget</span>
+                <span class="stat-value under">{{ getCategoriesUnderBudget() }}</span>
+              </div>
+              <div class="summary-stat">
+                <span class="stat-label">Total Variance</span>
+                <span class="stat-value" [class.positive]="getTotalVariance() < 0" [class.negative]="getTotalVariance() > 0">
+                  {{ getTotalVariance() > 0 ? '+' : '' }}\${{ getTotalVariance() | number:'1.0-0' }}
+                </span>
+              </div>
+            </div>
+            <div class="variance-list">
+              <div class="variance-item" *ngFor="let item of budgetVariance"
+                   [class.over-budget]="item.variance > 0"
+                   [class.under-budget]="item.variance < 0"
+                   [class.on-budget]="item.variance === 0">
+                <div class="category-info">
+                  <span class="category-name">{{ item.category }}</span>
+                  <span class="budget-amount">Budget: \${{ item.budgeted | number:'1.0-0' }}</span>
+                </div>
+                <div class="variance-metrics">
+                  <span class="actual-amount">Actual: \${{ item.actual | number:'1.0-0' }}</span>
+                  <span class="variance-amount">
+                    {{ item.variance > 0 ? '+' : '' }}\${{ item.variance | number:'1.0-0' }}
+                    ({{ item.variancePercent > 0 ? '+' : '' }}{{ item.variancePercent | number:'1.1-1' }}%)
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Financial Ratios -->
+        <section class="chart-card ratios-card">
+          <div class="chart-header">
+            <h2 class="chart-title">📊 Financial Health Ratios</h2>
+            <span class="chart-subtitle">Key financial indicators</span>
+          </div>
+          <div class="chart-content" *ngIf="financialRatios">
+            <div class="ratios-grid">
+              <div class="ratio-item" *ngFor="let ratio of getFormattedRatios()">
+                <div class="ratio-header">
+                  <span class="ratio-name">{{ ratio.name }}</span>
+                  <span class="ratio-status" [class]="ratio.status">{{ ratio.status | titlecase }}</span>
+                </div>
+                <div class="ratio-value">
+                  <span class="value">{{ ratio.displayValue }}</span>
+                  <span class="benchmark">Target: {{ ratio.benchmark }}</span>
+                </div>
+                <div class="ratio-bar">
+                  <div class="bar-fill" [style.width.%]="ratio.percentage" [class]="ratio.status"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>      <!-- Loading State -->
       <div class="loading" *ngIf="!kpis || !monthlyTrends">
         <div class="spinner"></div>
         <span>Loading analytics data...</span>
@@ -1006,6 +1153,437 @@ import { MockDataService } from '../../core/api/mock-loader';
         grid-template-columns: 1fr;
       }
     }
+
+    /* Cash Flow Styles */
+    .cashflow-metrics {
+      margin-bottom: var(--space-lg);
+    }
+
+    .metric-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+    }
+
+    .flow-item {
+      text-align: center;
+      padding: var(--space-md);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-light);
+    }
+
+    .flow-item.inflow {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+      border-color: var(--success-color);
+    }
+
+    .flow-item.outflow {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+      border-color: var(--danger-color);
+    }
+
+    .flow-item.net {
+      background: linear-gradient(135deg, rgba(79, 70, 229, 0.1), rgba(67, 56, 202, 0.1));
+      border-color: var(--primary-color);
+    }
+
+    .flow-label {
+      display: block;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .flow-value {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .cashflow-chart {
+      height: 200px;
+    }
+
+    .flow-bars {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      height: 150px;
+      gap: var(--space-sm);
+    }
+
+    .flow-month {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      gap: var(--space-sm);
+    }
+
+    .flow-bar-container {
+      display: flex;
+      gap: var(--space-xs);
+      height: 120px;
+      align-items: end;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .inflow-bar, .outflow-bar {
+      width: 20px;
+      position: relative;
+      border-radius: var(--radius-sm);
+      min-height: 4px;
+    }
+
+    .inflow-bar {
+      background: var(--success-gradient);
+    }
+
+    .outflow-bar {
+      background: var(--danger-gradient);
+    }
+
+    .bar-label {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+
+    /* Investment Performance Styles */
+    .portfolio-summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-lg);
+    }
+
+    .portfolio-value, .portfolio-gain {
+      text-align: center;
+      padding: var(--space-lg);
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-lg);
+    }
+
+    .portfolio-value .value {
+      display: block;
+      font-size: 2rem;
+      font-weight: 700;
+      background: var(--success-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .portfolio-gain .gain {
+      display: block;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .portfolio-gain .gain.positive {
+      color: var(--success-color);
+    }
+
+    .portfolio-gain .gain.negative {
+      color: var(--danger-color);
+    }
+
+    .portfolio-value .label, .portfolio-gain .label {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-top: var(--space-xs);
+    }
+
+    .investment-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .investment-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--space-md);
+      align-items: center;
+      padding: var(--space-md);
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-lg);
+      transition: all var(--transition-base);
+    }
+
+    .investment-item:hover {
+      background: var(--bg-secondary);
+    }
+
+    .asset-info {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .asset-name {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .asset-allocation {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .asset-performance {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--space-xs);
+    }
+
+    .asset-return {
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 0.875rem;
+    }
+
+    .asset-return.positive {
+      color: var(--success-color);
+      background: var(--success-bg);
+    }
+
+    .asset-return.negative {
+      color: var(--danger-color);
+      background: var(--danger-bg);
+    }
+
+    .asset-value {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .allocation-bar {
+      grid-column: span 2;
+      height: 4px;
+      background: var(--border-light);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      margin-top: var(--space-sm);
+    }
+
+    /* Budget Variance Styles */
+    .variance-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--space-lg);
+      margin-bottom: var(--space-lg);
+    }
+
+    .summary-stat {
+      text-align: center;
+      padding: var(--space-md);
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-lg);
+    }
+
+    .stat-label {
+      display: block;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-xs);
+    }
+
+    .stat-value {
+      display: block;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .stat-value.over {
+      color: var(--danger-color);
+    }
+
+    .stat-value.under {
+      color: var(--success-color);
+    }
+
+    .variance-list {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+
+    .variance-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--space-md);
+      align-items: center;
+      padding: var(--space-md);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-light);
+      transition: all var(--transition-base);
+    }
+
+    .variance-item.over-budget {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.05), rgba(220, 38, 38, 0.05));
+      border-color: var(--danger-color);
+    }
+
+    .variance-item.under-budget {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(5, 150, 105, 0.05));
+      border-color: var(--success-color);
+    }
+
+    .variance-item.on-budget {
+      background: var(--bg-tertiary);
+    }
+
+    .category-info {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xs);
+    }
+
+    .budget-amount {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .variance-metrics {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--space-xs);
+    }
+
+    .actual-amount {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .variance-amount {
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .variance-item.over-budget .variance-amount {
+      color: var(--danger-color);
+    }
+
+    .variance-item.under-budget .variance-amount {
+      color: var(--success-color);
+    }
+
+    /* Financial Ratios Styles */
+    .ratios-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--space-lg);
+    }
+
+    .ratio-item {
+      padding: var(--space-lg);
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-light);
+      transition: all var(--transition-base);
+    }
+
+    .ratio-item:hover {
+      background: var(--bg-secondary);
+    }
+
+    .ratio-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: var(--space-md);
+    }
+
+    .ratio-name {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .ratio-status {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      text-transform: uppercase;
+    }
+
+    .ratio-status.excellent {
+      color: var(--success-color);
+      background: var(--success-bg);
+    }
+
+    .ratio-status.good {
+      color: var(--primary-color);
+      background: var(--primary-bg);
+    }
+
+    .ratio-status.fair {
+      color: var(--warning-color);
+      background: var(--warning-bg);
+    }
+
+    .ratio-status.poor {
+      color: var(--danger-color);
+      background: var(--danger-bg);
+    }
+
+    .ratio-value {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: var(--space-md);
+    }
+
+    .ratio-value .value {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .ratio-value .benchmark {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .ratio-bar {
+      height: 8px;
+      background: var(--border-light);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+    }
+
+    .ratio-bar .bar-fill {
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+
+    .ratio-bar .bar-fill.excellent {
+      background: var(--success-gradient);
+    }
+
+    .ratio-bar .bar-fill.good {
+      background: var(--primary-gradient);
+    }
+
+    .ratio-bar .bar-fill.fair {
+      background: var(--warning-gradient);
+    }
+
+    .ratio-bar .bar-fill.poor {
+      background: var(--danger-gradient);
+    }
   `]
 })
 export default class AnalyticsPage implements OnInit, OnDestroy {
@@ -1017,11 +1595,13 @@ export default class AnalyticsPage implements OnInit, OnDestroy {
   monthlyTrends: any[] = [];
   categoryBreakdown: any[] = [];
   incomeStreams: any[] = [];
+  cashFlowData: any[] = [];
+  investmentData: any[] = [];
+  budgetVariance: any[] = [];
+  financialRatios: any = {};
 
   // UI state
-  selectedMetric = 'netWorth';
-
-  // Subscriptions
+  selectedMetric = 'netWorth';  // Subscriptions
   private subscriptions: any[] = [];
 
   ngOnInit() {
@@ -1059,6 +1639,31 @@ export default class AnalyticsPage implements OnInit, OnDestroy {
     this.subscriptions.push(
       this.mockDataService.getMockData<any[]>('analytics.incomeStreams').subscribe(data => {
         this.incomeStreams = data || [];
+      })
+    );
+
+    // Load advanced analytics data
+    this.subscriptions.push(
+      this.mockDataService.getMockData<any[]>('analytics.advancedMetrics.cashFlowAnalysis').subscribe(data => {
+        this.cashFlowData = data || [];
+      })
+    );
+
+    this.subscriptions.push(
+      this.mockDataService.getMockData<any[]>('analytics.advancedMetrics.investmentPerformance').subscribe(data => {
+        this.investmentData = data || [];
+      })
+    );
+
+    this.subscriptions.push(
+      this.mockDataService.getMockData<any[]>('analytics.advancedMetrics.budgetVariance').subscribe(data => {
+        this.budgetVariance = data || [];
+      })
+    );
+
+    this.subscriptions.push(
+      this.mockDataService.getMockData<any>('analytics.advancedMetrics.financialRatios').subscribe(data => {
+        this.financialRatios = data || {};
       })
     );
   }
@@ -1211,5 +1816,80 @@ export default class AnalyticsPage implements OnInit, OnDestroy {
   getMaxNetWorth(): number {
     if (!this.monthlyTrends.length) return 1;
     return Math.max(...this.monthlyTrends.map(m => m.netWorth));
+  }
+
+  // Cash Flow Methods
+  getAverageCashFlow(metric: string): number {
+    if (!this.cashFlowData.length) return 0;
+    const total = this.cashFlowData.reduce((sum, item) => sum + (item[metric] || 0), 0);
+    return total / this.cashFlowData.length;
+  }
+
+  getMaxCashFlow(): number {
+    if (!this.cashFlowData.length) return 1;
+    const maxInflow = Math.max(...this.cashFlowData.map(m => m.inflow));
+    const maxOutflow = Math.max(...this.cashFlowData.map(m => m.outflow));
+    return Math.max(maxInflow, maxOutflow);
+  }
+
+  // Investment Methods
+  getTotalPortfolioValue(): number {
+    return this.investmentData.reduce((total, asset) => total + asset.value, 0);
+  }
+
+  getTotalGainLoss(): number {
+    return this.investmentData.reduce((total, asset) => total + asset.gainLoss, 0);
+  }
+
+  // Budget Variance Methods
+  getCategoriesOverBudget(): number {
+    return this.budgetVariance.filter(item => item.variance > 0).length;
+  }
+
+  getCategoriesUnderBudget(): number {
+    return this.budgetVariance.filter(item => item.variance < 0).length;
+  }
+
+  getTotalVariance(): number {
+    return this.budgetVariance.reduce((total, item) => total + item.variance, 0);
+  }
+
+  // Financial Ratios Methods
+  getFormattedRatios(): any[] {
+    const ratioDefinitions = [
+      { key: 'currentRatio', name: 'Current Ratio', benchmark: '2.0+', target: 2.0 },
+      { key: 'debtToIncomeRatio', name: 'Debt-to-Income', benchmark: '<36%', target: 36, isPercentage: true, reverse: true },
+      { key: 'savingsRate', name: 'Savings Rate', benchmark: '20%+', target: 20, isPercentage: true },
+      { key: 'emergencyFundMonths', name: 'Emergency Fund', benchmark: '6+ months', target: 6 },
+      { key: 'investmentRatio', name: 'Investment Ratio', benchmark: '15%+', target: 15, isPercentage: true },
+      { key: 'netWorthGrowthRate', name: 'Net Worth Growth', benchmark: '7%+', target: 7, isPercentage: true }
+    ];
+
+    return ratioDefinitions.map(def => {
+      const value = this.financialRatios[def.key] || 0;
+      const percentage = def.reverse
+        ? Math.max(0, 100 - (value / def.target) * 100)
+        : (value / def.target) * 100;
+
+      let status = 'poor';
+      if (def.reverse) {
+        if (value <= def.target * 0.8) status = 'excellent';
+        else if (value <= def.target) status = 'good';
+        else if (value <= def.target * 1.2) status = 'fair';
+      } else {
+        if (value >= def.target) status = 'excellent';
+        else if (value >= def.target * 0.8) status = 'good';
+        else if (value >= def.target * 0.6) status = 'fair';
+      }
+
+      return {
+        name: def.name,
+        value: value,
+        displayValue: def.isPercentage ? `${value.toFixed(1)}%` : value.toFixed(1),
+        benchmark: def.benchmark,
+        percentage: Math.min(100, percentage),
+        status: status
+      };
+    });
   }
 }

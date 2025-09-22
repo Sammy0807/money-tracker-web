@@ -18,10 +18,11 @@ export class MockDataService {
       return Promise.resolve(null);
     }
 
-    this.loadingPromise = this.http.get<any>('assets/finance_mock.json')
+    this.loadingPromise = this.http.get<any>('finance_mock.json')
       .pipe(shareReplay(1))
       .toPromise()
       .then(data => {
+        console.log('MockDataService: successfully loaded mock data:', data);
         this.mockData$.next(data);
         return data;
       })
@@ -36,17 +37,21 @@ export class MockDataService {
 
   // Generic method to get any section of mock data
   getMockData<T>(path: string): Observable<T> {
+    console.log('MockDataService: getMockData called with path:', path, 'useMock:', environment.useMock);
     if (!environment.useMock) {
       throw new Error('Mock data not enabled');
     }
 
     return new Observable(observer => {
       this.loadMockData().then(data => {
+        console.log('MockDataService: loaded data:', data);
         // Navigate the path (e.g., 'user', 'accounts', 'transactions.paged.content')
         let result = data;
         for (const segment of path.split('.')) {
+          console.log('MockDataService: navigating segment:', segment, 'current result:', result);
           result = result?.[segment];
         }
+        console.log('MockDataService: final result for path', path, ':', result);
         observer.next(result as T);
         observer.complete();
       });
