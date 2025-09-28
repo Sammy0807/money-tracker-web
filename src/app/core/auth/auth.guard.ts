@@ -1,23 +1,65 @@
-import { inject } from '@angular/core';
-import { CanActivateFn, Router } from '@angular/router';
-import { KeycloakService } from 'keycloak-angular';
+import { Injectable, inject } from '@angular/core';
+import { CanActivate, CanActivateChild, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { Observable, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { AuthService } from './auth.service';
 
-export const authGuard: CanActivateFn = async () => {
-  const kc = inject(KeycloakService);
-  const router = inject(Router);
+@Injectable({ providedIn: 'root' })
+export class AuthGuard implements CanActivate, CanActivateChild {
+  private authService = inject(AuthService);
+  private router = inject(Router);
 
-  // Skip auth check if using mock data
-  if (!kc) return true;
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | boolean {
+    return this.checkAuth(state.url);
+  }
 
-  try {
-    const authenticated = await kc.isLoggedIn();
-    if (!authenticated) {
-      await kc.login();
+  canActivateChild(
+    childRoute: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean> | Promise<boolean> | boolean {
+    return this.canActivate(childRoute, state);
+  }
+
+  private checkAuth(url: string): Observable<boolean> {
+    if (this.authService.isAuthenticated()) {
+      // Check if token is expired
+      if (this.authService.isTokenExpired()) {
+        // Try to refresh token
+        return this.authService.refreshToken().pipe(
+          map(() => true),
+          catchError(() => {
+            this.redirectToLogin(url);
+            return of(false);
+          })
+        );
+      }
+      return of(true);
+    }
+
+    this.redirectToLogin(url);
+    return of(false);
+  }
+
+  private redirectToLogin(url: string): void {
+    this.router.navigate(['/login'], {
+      queryParams: { returnUrl: url }
+    });
+  }
+}
+
+@Injectable({ providedIn: 'root' })
+export class LoginGuard implements CanActivate {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
+  canActivate(): boolean {
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/dashboard']); // or your default authenticated route
       return false;
     }
     return true;
-  } catch (error) {
-    console.warn('Keycloak auth error, allowing access:', error);
-    return true; // Allow access if Keycloak fails (for development)
   }
-};
+}

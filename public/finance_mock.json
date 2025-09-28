@@ -159,6 +159,7 @@
   "accounts": [
     {
       "id": "ce3c254f-a337-4f7f-ba75-e1e75fc5cf35",
+      "userId": "660eee24-bb5c-49b1-8f2e-7f1609e81a47",
       "name": "Everyday Checking",
       "institution": "Chase",
       "type": "CHECKING",
@@ -171,6 +172,7 @@
     },
     {
       "id": "8a7d1b2c-4e5f-6a7b-8c9d-0e1f2a3b4c5d",
+      "userId": "660eee24-bb5c-49b1-8f2e-7f1609e81a47",
       "name": "Premium Savings",
       "institution": "Chase",
       "type": "SAVINGS",
@@ -183,6 +185,7 @@
     },
     {
       "id": "b9c8d7e6-f5a4-b3c2-d1e0-f9e8d7c6b5a4",
+      "userId": "660eee24-bb5c-49b1-8f2e-7f1609e81a47",
       "name": "Freedom Unlimited",
       "institution": "Chase",
       "type": "CREDIT",
@@ -196,6 +199,7 @@
     },
     {
       "id": "e7f6a5b4-c3d2-e1f0-a9b8-c7d6e5f4a3b2",
+      "userId": "660eee24-bb5c-49b1-8f2e-7f1609e81a47",
       "name": "Traditional IRA",
       "institution": "Fidelity",
       "type": "INVESTMENT",
@@ -208,6 +212,7 @@
     },
     {
       "id": "a9b8c7d6-e5f4-a3b2-c1d0-e9f8a7b6c5d4",
+      "userId": "660eee24-bb5c-49b1-8f2e-7f1609e81a47",
       "name": "401(k)",
       "institution": "Fidelity",
       "type": "INVESTMENT",

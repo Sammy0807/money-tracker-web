@@ -14,6 +14,7 @@ export interface User {
 
 export interface Account {
   id: UUID;
+  userId: UUID; // owner reference
   name: string;
   institution?: string;
   type: 'CASH'|'CHECKING'|'SAVINGS'|'CREDIT'|'LOAN'|'INVESTMENT'|'OTHER';

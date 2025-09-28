@@ -1,0 +1,109 @@
+.transactions-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.5rem;
+  animation: fadeIn .3s ease;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+
+    h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: .5px;
+    }
+
+    .refresh {
+      background: linear-gradient(135deg, var(--color-primary, #4f46e5), var(--color-accent, #6366f1));
+      border: none;
+      color: #fff;
+      padding: .6rem 1rem;
+      font-size: .9rem;
+      border-radius: .55rem;
+      cursor: pointer;
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0,0,0,.15);
+      transition: background .25s ease, transform .15s ease, box-shadow .25s ease;
+
+      &:hover { box-shadow: 0 4px 10px rgba(0,0,0,.2); transform: translateY(-2px); }
+      &:active { transform: translateY(0); box-shadow: 0 2px 4px rgba(0,0,0,.15); }
+    }
+  }
+
+  .table-wrapper {
+    background: var(--surface-color, #ffffff);
+    border-radius: 12px;
+    padding: 1rem 1.25rem 1.25rem;
+    box-shadow: 0 4px 14px -3px rgba(0,0,0,.08), 0 2px 4px -2px rgba(0,0,0,.06);
+    overflow: auto;
+  }
+
+  .transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .9rem;
+
+    thead {
+      background: linear-gradient(90deg, var(--color-primary, #4f46e5), var(--color-accent, #6366f1));
+      color: #fff;
+
+      th {
+        font-weight: 600;
+        text-align: left;
+        padding: .65rem .75rem;
+        white-space: nowrap;
+        letter-spacing: .3px;
+        font-size: .75rem;
+        text-transform: uppercase;
+      }
+    }
+
+    tbody {
+      tr {
+        transition: background .15s ease;
+
+        &:nth-child(even) { background: rgba(0,0,0,.02); }
+        &:hover { background: rgba(99,102,241,.08); }
+      }
+
+      td {
+        padding: .55rem .75rem;
+        border-bottom: 1px solid rgba(0,0,0,.06);
+        vertical-align: middle;
+      }
+
+      .negative { color: #dc2626; font-weight: 500; }
+      .positive { color: #16a34a; font-weight: 500; }
+    }
+  }
+
+  .loading-state {
+    padding: 2rem;
+    text-align: center;
+    font-size: .95rem;
+    color: #666;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 700px) {
+  .transactions-page {
+    padding: 1rem;
+
+    .transactions-table {
+      font-size: .8rem;
+
+      thead th { padding: .5rem .4rem; }
+      tbody td { padding: .45rem .4rem; }
+    }
+  }
+}

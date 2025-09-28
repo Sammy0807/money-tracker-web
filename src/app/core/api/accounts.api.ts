@@ -8,7 +8,8 @@ import { MockDataService } from './mock-loader';
 @Injectable({ providedIn: 'root' })
 export class AccountsApi {
   private http = inject(HttpClient);
-  private mockService = inject(MockDataService);
+
+
   accounts = signal<Account[] | null>(null);
   loading = signal(false);
 
@@ -16,25 +17,29 @@ export class AccountsApi {
     console.log('AccountsApi: list() called, useMock:', environment.useMock);
     this.loading.set(true);
 
-    if (environment.useMock) {
-      console.log('AccountsApi: using mock data');
-      return this.mockService.getMockData<Account[]>('accounts').subscribe({
-        next: (data) => {
-          console.log('AccountsApi: received mock data:', data);
-          this.accounts.set(data);
-          this.loading.set(false);
-        },
-        error: (error) => {
-          console.error('AccountsApi: mock data error:', error);
-          this.loading.set(false);
-        }
-      });
-    }
-
-    console.log('AccountsApi: using real API');
     return this.http.get<Account[]>(API.accounts).subscribe({
-      next: (data) => { this.accounts.set(data); this.loading.set(false); },
-      error: () => this.loading.set(false)
+      next: data => {
+        this.accounts.set(data);
+        this.loading.set(false);
+      },
+      error: err => {
+        // Enhanced diagnostics: differentiate network/CORS vs auth vs server
+        const details = {
+          message: err?.message,
+            status: err?.status,
+            statusText: err?.statusText,
+            url: err?.url,
+            error: err?.error
+        };
+        console.error('AccountsApi: real API error', details);
+        if (details.status === 0) {
+          console.warn('Status 0 suggests network failure or CORS preflight rejection.');
+        }
+        if (details.status === 401 || details.status === 403) {
+          console.warn('Auth issue: verify token audience, realm, clientId, and interceptor.');
+        }
+        this.loading.set(false);
+      }
     });
   }
 

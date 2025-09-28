@@ -1,8 +1,13 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './core/auth/auth.guard';
 
 export const routes: Routes = [
   { path: 'dashboard', loadComponent: () => import('./features/dashboard/dashboard.page').then(m => m.default) },
-  { path: 'accounts', loadComponent: () => import('./features/accounts/accounts.page').then(m => m.default) },
+  {
+    path: 'accounts',
+    loadComponent: () => import('./features/accounts/accounts.page').then(m => m.default),
+    canActivate: [AuthGuard]
+  },
   { path: 'transactions', loadComponent: () => import('./features/transactions/transactions.page').then(m => m.default) },
   { path: 'budget', loadComponent: () => import('./features/budget/budget.page').then(m => m.default) },
   { path: 'analytics', loadComponent: () => import('./features/analytics/analytics.page').then(m => m.default) },
